@@ -384,13 +384,22 @@ H5P.init = function (target) {
     };
 
     $iframe.addClass('h5p-initialized')
-    if (iframe.contentDocument === null) {
-      // In some Edge cases the iframe isn't always loaded when the page is ready.
-      $iframe.on('load', writeDocument);
-      $iframe.attr('src', 'about:blank');
+
+    // For backwaards compatibility we need to check for about:blank in two ways.
+    if (iframe.src === 'about:blank' || iframe.src === window.location.origin + '/about:blank') {
+        if (iframe.contentDocument === null) {
+        // In some Edge cases the iframe isn't always loaded when the page is ready.
+        $iframe.on('load', writeDocument);
+        $iframe.attr('src', 'about:blank');
+        }
+        else {
+          writeDocument();
+        }
     }
     else {
-      writeDocument();
+        // Safari with Youtube requires a src that sends a referrer.
+        // Always wait for the iframe to load.
+        $iframe.on('load', writeDocument);
     }
   });
 };
