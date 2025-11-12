@@ -390,7 +390,8 @@ H5P.init = function (target) {
       $iframe.attr('src', 'about:blank');
     }
     else {
-      writeDocument();
+       $iframe.on('load', writeDocument);
+      // writeDocument();
     }
   });
 };
