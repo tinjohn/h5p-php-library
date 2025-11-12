@@ -383,23 +383,16 @@ H5P.init = function (target) {
       iframe.srcdoc = '<!doctype html><html class="h5p-iframe" lang="' + contentLanguage + '"><head>' + H5P.getHeadTags(contentId) + '</head><body><div class="h5p-content" data-content-id="' + contentId + '"/></body></html>';
     };
 
-    $iframe.addClass('h5p-initialized')
-
-    // For backwaards compatibility we need to check for about:blank in two ways.
-    if (iframe.src === 'about:blank' || iframe.src === window.location.origin + '/about:blank') {
-        if (iframe.contentDocument === null) {
-        // In some Edge cases the iframe isn't always loaded when the page is ready.
+    $iframe.addClass('h5p-initialized');
+    // For backwards compatibility we need to check for about:blank in two ways.
+    if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete') {
+        writeDocument();
+    } else {
+        // Wait for iframe load event (works real files)
         $iframe.on('load', writeDocument);
-        $iframe.attr('src', 'about:blank');
+        if (!$iframe.attr('src')) {
+            $iframe.attr('src', 'about:blank');
         }
-        else {
-          writeDocument();
-        }
-    }
-    else {
-        // Safari with Youtube requires a src that sends a referrer.
-        // Always wait for the iframe to load.
-        $iframe.on('load', writeDocument);
     }
   });
 };
