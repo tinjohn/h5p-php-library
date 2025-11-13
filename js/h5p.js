@@ -385,16 +385,9 @@ H5P.init = function (target) {
       iframe.contentDocument.close();
     };
 
-    $iframe.addClass('h5p-initialized')
-    if (iframe.contentDocument === null) {
-      // In some Edge cases the iframe isn't always loaded when the page is ready.
-      $iframe.on('load', writeDocument);
-      $iframe.attr('src', 'about:blank');
-    }
-    else {
-      $iframe.on('load', writeDocument);
-      //writeDocument();
-    }
+    $iframe.addClass('h5p-initialized');
+    $iframe.on('load', writeDocument);
+ 
   });
 };
 
